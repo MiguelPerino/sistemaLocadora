@@ -150,7 +150,11 @@ def registerRent(clients, cars):
             break
     
     if not selected_car:
-        print('\nNenhum carro encontrado com este código\n')
+        print('\nCarro não encontrado ou indisponível.\n')
+        return
+    
+    if not selected_car.rent():
+        print('Carro indisponível.')
         return
 
     start = datetime.date.today()
@@ -164,9 +168,7 @@ def registerRent(clients, cars):
         except ValueError:
             print('Entrada inválida para dias alugados.')  
 
-    if not selected_car.rent():
-        print('Carro indisponível.')
-        return
+
 
     rent = Rent(id_rent, client, selected_car, days)
     all_rents.append(rent)
@@ -197,11 +199,29 @@ if __name__ == '__main__':
         elif op == 3:
             registerRent(all_clients, all_cars)
         elif op == 4:
-            ...
+            available_cars = [car for car in all_cars if car.available]
+            if available_cars:
+                for c in available_cars:
+                    print(c)
+            else:
+                print('Nenhum carro disponível no momento.')
+                
         elif op == 5:
-            ...
+            unvailable_cars = [car for car in all_cars if not car.available]
+            if unvailable_cars:
+                for c in unvailable_cars:
+                    print(c)
+            else:
+                print('Todos os carros estão disponíveis.')
+
         elif op == 6:
-            ...
+            if not all_rents:
+                print('\nNenhum aluguel registrado.\n')
+            else:
+                print('\n=== ALUGUÉIS ===')
+                for rent in all_rents:
+                    print(rent)
+                    
         elif op == 7: 
             print('\nSaindo do programa, até mais...')
             break
